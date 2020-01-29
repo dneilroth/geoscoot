@@ -1,0 +1,5 @@
+docker-compose run web rm -rf tmp/pids
+
+docker-compose up -d postgres
+sleep(10)
+docker-compose up -d web
