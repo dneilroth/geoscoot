@@ -1,6 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    aasm (5.0.6)
+      concurrent-ruby (~> 1.0)
     actioncable (5.2.4.1)
       actionpack (= 5.2.4.1)
       nio4r (~> 2.0)
@@ -45,11 +47,16 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    acts_as_paranoid (0.6.3)
+      activerecord (>= 4.2, < 7.0)
+      activesupport (>= 4.2, < 7.0)
+    ansi (1.5.0)
     arel (9.0.0)
     bootsnap (1.4.5)
       msgpack (~> 1.0)
     builder (3.2.4)
     byebug (11.1.1)
+    chronic (0.10.2)
     concurrent-ruby (1.1.5)
     crass (1.0.6)
     erubi (1.9.0)
@@ -78,6 +85,9 @@ GEM
     nio4r (2.5.2)
     nokogiri (1.10.7)
       mini_portile2 (~> 2.4.0)
+    papertrail (0.11.0)
+      ansi (~> 1.5)
+      chronic (~> 0.10)
     pg (1.2.2)
     puma (3.12.2)
     rack (2.1.2)
@@ -140,10 +150,13 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  aasm
   activerecord-postgis-adapter
+  acts_as_paranoid
   bootsnap (>= 1.1.0)
   byebug
   listen (>= 3.0.5, < 3.2)
+  papertrail
   pg
   puma (~> 3.11)
   rails (~> 5.2.3)
@@ -156,4 +169,4 @@ RUBY VERSION
    ruby 2.5.3p105
 
 BUNDLED WITH
-   1.17.1
+   1.17.2
