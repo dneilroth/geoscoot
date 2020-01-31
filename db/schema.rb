@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_30_065404) do
+ActiveRecord::Schema.define(version: 2020_01_31_072619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,18 @@ ActiveRecord::Schema.define(version: 2020_01_30_065404) do
     t.datetime "updated_at", null: false
     t.index ["completed_at"], name: "index_tickets_on_completed_at"
     t.index ["scooter_id"], name: "index_tickets_on_scooter_id"
+  end
+
+  create_table "transitions", force: :cascade do |t|
+    t.string "from"
+    t.string "to"
+    t.string "event"
+    t.integer "battery"
+    t.geography "lonlat", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
+    t.bigint "scooter_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["scooter_id"], name: "index_transitions_on_scooter_id"
   end
 
   create_table "versions", force: :cascade do |t|
