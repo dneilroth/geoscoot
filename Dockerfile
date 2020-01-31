@@ -3,7 +3,7 @@ FROM ruby:2.5.3
 RUN apt-get update
 RUN apt-get install -y libsodium-dev nodejs build-essential libssl-dev git make g++ libxml2 libxml2-dev libxslt-dev libffi-dev bash
 
-ARG RAILS_ENV=production
+ARG RAILS_ENV=development
 
 ENV APP_HOME /app
 RUN mkdir $APP_HOME
