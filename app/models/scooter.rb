@@ -4,6 +4,11 @@ class Scooter < ApplicationRecord
   has_many :tickets
 
   validates :battery, inclusion: { in: (0..100) }
+  FROM_STATE_EVENT_MAP = {
+    locked: :lock!,
+    unlocked: :unlock!,
+    maintenance: :maintain,
+  }.freeze
 
   aasm whiny_transitions: false, column: :state do
     state :locked, initial: true
@@ -12,19 +17,21 @@ class Scooter < ApplicationRecord
     after_all_transitions :log_transition
 
     event :unlock do
-      transitions from: [:locked, :maintenance], to: :unlocked
+      transitions from: [:updating, :locked, :maintenance], to: :unlocked
     end
 
     event :maintain do
-      transitions from: [:locked, :unlocked], to: :maintenance
+      transitions from: [:updating, :locked, :unlocked], to: :maintenance
     end
 
     event :lock do
-      transitions from: [:unlocked, :maintenance], to: :locked
+      transitions from: [:updating, :unlocked, :maintenance], to: :locked
     end
 
     event :update_data do
-      transitions from: [:unlocked, :maintenance, :locked], to: :updating
+      transitions from: [:unlocked, :maintenance, :locked],
+                  to: :updating,
+                  after: :return_to_previous_state
     end
   end
 
@@ -36,5 +43,10 @@ class Scooter < ApplicationRecord
       battery: battery,
       lonlat: lonlat
     )
+  end
+
+  def return_to_previous_state
+    byebug
+    send(FROM_STATE_EVENT_MAP[aasm.from_state])
   end
 end
