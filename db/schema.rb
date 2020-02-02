@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(version: 2020_01_31_072619) do
   create_table "scooters", force: :cascade do |t|
     t.string "state"
     t.integer "battery"
-    t.geography "lonlat", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
+    t.geography "lonlat", limit: { srid: 4326, type: "st_point", geographic: true }
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["state"], name: "index_scooters_on_state"
