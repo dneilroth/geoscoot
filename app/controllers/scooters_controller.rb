@@ -10,7 +10,7 @@ class ScootersController < ApplicationController
   end
 
   def bulk_unlock
-    @scooters = Scooter.where(id: params[:ids], state: 'locked')
+    @scooters = Scooter.where(id: params[:ids], state: Scooter::STATE_LOCKED)
 
     if @scooters.present?
       @scooters.each(&:unlock!)
