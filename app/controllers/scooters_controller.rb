@@ -11,7 +11,6 @@ class ScootersController < ApplicationController
   end
 
   def bulk_unlock
-    print "params ids are #{params[:ids]}\n"
     @scooters = Scooter.where(
       id: params[:ids].split(',').map(&:to_i),
       state: Scooter::STATE_LOCKED

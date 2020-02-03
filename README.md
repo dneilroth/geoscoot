@@ -2,6 +2,7 @@
 
 ## How to run the app
 use `sh bin/dev-up` to build and run the application using docker.
+use `sh bin/dev-test` to run the tests
 This will:
 1. start a postgres server with the postgis extension
 2. start a webserver
@@ -19,7 +20,6 @@ data feed of all scooters and their state transitions: `curl "localhost:3000/sco
 unlock a list of scooters: `curl -X PUT "localhost:3000/scooters/bulk_unlock?ids=1,2,4"`
 
 update a scooter location and set battery to 5%: `curl -X PUT "localhost:3000/scooters/1?lon=122&lat=34&battery=5"`
-
 
 ## A scooter reporting its current location and battery life
 Capability to report current location and battery life of a particular scooter is enabled by the `PUT   /scooters/:id(.:format) scooters#update` route.  Tests located in `spec/controllers/scooters_controller_spec.rb`
@@ -71,3 +71,9 @@ location being updated
 maintenance state changes
 ```
 We get all of this functionality through the transitions table and the use of a state machine in our Scooter model.
+
+## Given more time
+1. add more tests
+2. rethink using state transitions to represent location + battery updates
+3. add validation to models + db
+4. handle errors that occur during state machine transitions. currently the state machine is quite brittle and it is possible to get a scooter stuck in a transient state (i.e. 'updating' state)

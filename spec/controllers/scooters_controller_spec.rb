@@ -27,7 +27,9 @@ RSpec.describe ScootersController, type: :controller do
         scooters << create(:scooter)
       end
 
-      put :bulk_unlock, params: { ids: scooters.map(&:id) }
+      put :bulk_unlock, params: {
+        ids: "#{scooters[0].id},#{scooters[1].id},#{scooters[2].id}"
+      }
       scooters.each(&:reload)
 
       expect(scooters.first.state).to eq('unlocked')
@@ -35,7 +37,7 @@ RSpec.describe ScootersController, type: :controller do
 
     context 'scooters do not exist' do
       it 'returns a 404 status' do
-        put :bulk_unlock, params: { ids: ['wrong_id'] }
+        put :bulk_unlock, params: { ids: 'wrong_id' }
 
         expect(response.status).to eq(404)
       end
