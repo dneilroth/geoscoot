@@ -33,6 +33,16 @@ class ScootersController < ApplicationController
     end
   end
 
+  def index
+    @scooters = Scooter.includes(:transitions).all
+
+    if @scooters.present?
+      render json: @scooters, include: [:transitions]
+    else
+      render json: {}, status: :not_found
+    end
+  end
+
   private def update_params
     params.permit(:lon, :lat, :battery)
   end

@@ -30,7 +30,7 @@ class Scooter < ApplicationRecord
     end
 
     event :lock do
-      transitions from: [:updating, :unlocked], to: :locked
+      transitions from: [:updating, :unlocked, :maintenance], to: :locked
     end
 
     event :update_data do

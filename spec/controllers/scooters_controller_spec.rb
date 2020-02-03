@@ -93,6 +93,57 @@ RSpec.describe ScootersController, type: :controller do
           expect(scooters).to be_empty
         end
       end
+
+      context 'scooters with low battery' do
+        before do
+          scooters_within_radius.each do |scoot|
+            scoot.update(battery: 25)
+          end
+        end
+
+        it 'does not include scooters with low battery' do
+          get :active, params: { lon: lon, lat: lat, radius: 5 }
+          scooters = JSON.parse(response.body)
+          expect(scooters).to be_empty
+        end
+      end
+    end
+  end
+
+  describe 'GET index' do
+    let(:lon) { -122.431297 }
+    let(:lat) { 37.773972 }
+    let(:offsets) { [-0.0001, 0.0002, -0.0002, 0.1, 0.2]}
+    before do
+      5.times do
+        offset = offsets.pop
+        scooter = create(:scooter, lonlat: "POINT(#{lon + offset} #{lat + offset})")
+        scooter.unlock!
+        scooter.maintain!
+        scooter.update_data!({ lon: -123, lat: 36, battery: 40 })
+        scooter.lock!
+      end
+    end
+
+    it 'is the data_feed for all scooters and includes all transitions' do
+      get :index
+      scooters = JSON.parse(response.body)
+
+      expect(scooters.count).to eq(5)
+      expect(scooters.first['transitions'].count).to eq(5)
+    end
+
+    it 'contains the detail of each transition' do
+      get :index
+      scooters = JSON.parse(response.body)
+      scooter = scooters.first
+      last_transition = scooter['transitions'][-1]
+
+      expect(last_transition['from']).to eq('maintenance')
+      expect(last_transition['to']).to eq('locked')
+      expect(last_transition['event']).to eq('lock!')
+      expect(last_transition['battery']).to eq(40)
+      expect(last_transition['lonlat']).to eq('POINT (-123.0 36.0)')
     end
   end
 end
