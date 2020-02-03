@@ -4,6 +4,7 @@ class TicketsController < ApplicationController
 
     if @scooter
       @scooter.maintain!(ticket_params)
+      render json: @scooter.tickets.order(created_at: :desc).first
     else
       render json: {}, status: :not_found
     end

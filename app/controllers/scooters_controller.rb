@@ -4,16 +4,22 @@ class ScootersController < ApplicationController
 
     if @scooter
       @scooter.update_data!(update_params)
+      render json: @scooter
     else
       render json: {}, status: :not_found
     end
   end
 
   def bulk_unlock
-    @scooters = Scooter.where(id: params[:ids], state: Scooter::STATE_LOCKED)
+    print "params ids are #{params[:ids]}\n"
+    @scooters = Scooter.where(
+      id: params[:ids].split(',').map(&:to_i),
+      state: Scooter::STATE_LOCKED
+    )
 
     if @scooters.present?
       @scooters.each(&:unlock!)
+      render json: @scooters.map(&:id)
     else
       render json: {}, status: :not_found
     end

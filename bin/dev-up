@@ -3,3 +3,4 @@ docker-compose build
 docker-compose up -d postgres
 sleep 3
 docker-compose up -d web
+docker-compose exec web bundle exec rails db:reset
