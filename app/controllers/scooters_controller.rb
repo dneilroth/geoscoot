@@ -3,6 +3,12 @@ class ScootersController < ApplicationController
     @scooter = Scooter.find_by(id: params[:id])
 
     if @scooter
+      battery = update_params[:battery]&.to_i
+
+      if battery && (battery < 0 || battery > 100)
+        return render json: {}, status: :bad_request
+      end
+
       @scooter.update_data!(update_params)
       render json: @scooter
     else

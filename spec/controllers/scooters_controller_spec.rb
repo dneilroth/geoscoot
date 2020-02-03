@@ -2,9 +2,11 @@ require 'rails_helper'
 
 RSpec.describe ScootersController, type: :controller do
   describe 'PUT update' do
+    let(:scooter) { create(:scooter) }
+
     it 'updates a scooter' do
-      scooter = create(:scooter)
       put :update, params: { id: scooter.id, lon: -121, lat: 35, battery: 50 }
+
       scooter.reload
       expect(scooter.lonlat.lon).to eq(-121)
       expect(scooter.lonlat.lat).to eq(35)
@@ -16,6 +18,24 @@ RSpec.describe ScootersController, type: :controller do
         put :update, params: { id: 'wrong_id' }
 
         expect(response.status).to eq(404)
+      end
+    end
+
+    context 'battery' do
+      context 'of less than 0' do
+        it 'returns a 400 status' do
+          put :update, params: { id: scooter.id, lon: -121, lat: 35, battery: -5 }
+
+          expect(response.status).to eq(400)
+        end
+      end
+
+      context 'of greater than 100' do
+        it 'returns a 400 status' do
+          put :update, params: { id: scooter.id, lon: -121, lat: 35, battery: 101 }
+
+          expect(response.status).to eq(400)
+        end
       end
     end
   end
